@@ -4,7 +4,11 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/3.5.4/9c007e596b63aace6f62b4109c65770422919138/spring-boot-starter-logging-3.5.4.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/3.5.4/cf3b8a1224aac6290da56a4a435ac645c0c4118f/spring-boot-starter-logging-3.5.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-logging/3.5.4/cf3b8a1224aac6290da56a4a435ac645c0c4118f/spring-boot-starter-logging-3.5.4-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
