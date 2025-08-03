@@ -5,10 +5,15 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
+          <entry name="$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
         <module name="CSE_Back.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CSE_Back" target="17" />
+      <module name="CSE_Back.main" target="17" />
+      <module name="CSE_Back.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
