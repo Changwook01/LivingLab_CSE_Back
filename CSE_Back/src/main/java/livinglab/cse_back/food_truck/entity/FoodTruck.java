@@ -1,5 +1,6 @@
 package livinglab.cse_back.food_truck.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import livinglab.cse_back.menu.entity.Menu;
 import livinglab.cse_back.user.entity.User;
@@ -23,6 +24,7 @@ public class FoodTruck {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User owner;
 
     @Column(nullable = false, length = 100)
@@ -32,7 +34,7 @@ public class FoodTruck {
 
     private String licenseImageUrl;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = StatusConverter.class)
     @Column(length = 20)
     private Status status = Status.PENDING;
 

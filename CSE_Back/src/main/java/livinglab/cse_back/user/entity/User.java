@@ -27,8 +27,8 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
+    @Convert(converter = RoleConverter.class)
     @Column(nullable = false, length = 20)
-    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "created_at", updatable = false)

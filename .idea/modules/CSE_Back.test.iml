@@ -13,7 +13,10 @@
     <content url="file://$MODULE_DIR$/../../CSE_Back/src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../CSE_Back/src/test/java" isTestSource="true" />
     </content>
-    <orderEntry type="jdk" jdkName="homebrew-17 (2)" jdkType="JavaSDK" />
+    <content url="file://$MODULE_DIR$/../../CSE_Back/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../CSE_Back/src/test/java" isTestSource="true" />
+    </content>
+    <orderEntry type="jdk" jdkName="homebrew-17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="CSE_Back.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.5.4" level="project" />

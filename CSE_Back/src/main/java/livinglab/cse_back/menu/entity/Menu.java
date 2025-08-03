@@ -1,5 +1,6 @@
 package livinglab.cse_back.menu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import livinglab.cse_back.food_truck.entity.FoodTruck;
 import lombok.*;
@@ -19,6 +20,7 @@ public class Menu {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_truck_id")
+    @JsonIgnore
     private FoodTruck foodTruck;
 
     @Column(nullable = false, length = 100)
