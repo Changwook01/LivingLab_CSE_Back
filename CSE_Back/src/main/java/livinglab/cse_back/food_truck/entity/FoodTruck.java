@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.locationtech.jts.geom.Point; // ◀️ Point 타입을 임포트합니다.
 
 @Getter
 @Setter
@@ -32,19 +33,24 @@ public class FoodTruck {
 
     private String description;
 
+    @Column(name = "license_image_url")
     private String licenseImageUrl;
 
     @Convert(converter = StatusConverter.class)
     @Column(length = 20)
-    private Status status = Status.PENDING;
+    private Status status = Status.CLOSED;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public enum Status {
-        PENDING, APPROVED, REJECTED
+        OPERATING, // 영업 중
+        CLOSED     // 영업 종료
     }
 
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menus;
+
+    @Column(name = "location", columnDefinition = "geography(Point, 4326)")
+    private Point location;
 }
