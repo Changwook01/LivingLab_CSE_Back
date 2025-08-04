@@ -166,7 +166,24 @@ public class UserService {
         LocalDate today = LocalDate.now();
         long orderCount = orderRepository.countTodayOrders(today);
         int totalRevenue = Optional.ofNullable(orderRepository.sumTodayRevenue(today)).orElse(0);
-        String topMenu = orderRepository.findTopMenuToday(today);
+
+        List<Object[]> stats = orderRepository.findMenuSalesStatsToday(today);
+
+        String topMenu = null;
+        if (!stats.isEmpty()) {
+            // orderCount, maxPrice 기준으로 이미 정렬되어 있으니 첫 번째 요소가 우선 순위
+            List<Object[]> topCandidates = stats.stream()
+                    .filter(o -> ((Long) o[1]).equals(stats.get(0)[1]) && ((Integer) o[2]).equals(stats.get(0)[2]))
+                    .toList();
+
+            if (topCandidates.size() == 1) {
+                topMenu = (String) topCandidates.get(0)[0];
+            } else {
+                // orderCount와 maxPrice가 같은 메뉴가 여러 개일 때 랜덤 선택
+                int randomIndex = (int) (Math.random() * topCandidates.size());
+                topMenu = (String) topCandidates.get(randomIndex)[0];
+            }
+        }
 
         TodaySalesDTO salesResponse = TodaySalesDTO.builder()
                 .orderCount(orderCount)

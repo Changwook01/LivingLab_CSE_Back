@@ -54,6 +54,6 @@ public class FoodTruck {
 
     /** ✅ CLOSED 상태 추가 */
     public enum Status {
-        PENDING, APPROVED, REJECTED, CLOSED
+        PENDING, APPROVED, REJECTED, CLOSED, OPERATING
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -20,5 +21,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     // 오늘 가장 많이 팔린 메뉴 이름
     @Query("SELECT o.menu.name FROM Order o WHERE CAST(o.createdAt AS date) = :today GROUP BY o.menu.name ORDER BY COUNT(o) DESC")
     String findTopMenuToday(@Param("today") LocalDate today);
+
+    @Query("""
+    SELECT o.menu.name, COUNT(o), MAX(o.menu.price)
+    FROM Order o
+    WHERE CAST(o.createdAt AS date) = :today
+    GROUP BY o.menu.name
+    ORDER BY COUNT(o) DESC, MAX(o.menu.price) DESC
+""")
+    List<Object[]> findMenuSalesStatsToday(@Param("today") LocalDate today);
+
 
 }
