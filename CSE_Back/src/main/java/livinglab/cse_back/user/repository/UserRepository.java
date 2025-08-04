@@ -3,5 +3,8 @@ package livinglab.cse_back.user.repository;
 import livinglab.cse_back.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 }
