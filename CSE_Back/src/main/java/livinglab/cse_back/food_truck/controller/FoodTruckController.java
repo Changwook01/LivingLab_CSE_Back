@@ -48,7 +48,6 @@ public class FoodTruckController {
         return foodTruckService.updateStatus(id, status);
     }
 
-    private final FoodTruckService foodTruckService;
 
     // 영업 시작 API
     @PostMapping("/{truckId}/start")

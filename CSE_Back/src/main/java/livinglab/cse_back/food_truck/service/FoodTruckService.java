@@ -48,7 +48,6 @@ public class FoodTruckService {
         truck.setStatus(status);
         return foodTruckRepository.save(truck);
     }
-    private final FoodTruckRepository foodTruckRepository;
     private final GeometryUtil geometryUtil;
 
     // 영업 시작 로직
