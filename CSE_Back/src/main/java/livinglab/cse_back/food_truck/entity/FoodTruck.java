@@ -1,10 +1,12 @@
 package livinglab.cse_back.food_truck.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import livinglab.cse_back.menu.entity.Menu;
 import livinglab.cse_back.user.entity.User;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +27,7 @@ public class FoodTruck {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private User owner;
 
     @Column(nullable = false, length = 100)
@@ -43,14 +45,14 @@ public class FoodTruck {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public enum Status {
-        OPERATING, // 영업 중
-        CLOSED     // 영업 종료
-    }
-
     @OneToMany(mappedBy = "foodTruck", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Menu> menus;
 
     @Column(name = "location", columnDefinition = "geography(Point, 4326)")
     private Point location;
+    /** ✅ CLOSED 상태 추가 */
+    public enum Status {
+        PENDING, APPROVED, REJECTED, CLOSED, OPERATING
+    }
 }
