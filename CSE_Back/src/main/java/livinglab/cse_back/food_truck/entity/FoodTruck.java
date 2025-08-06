@@ -2,6 +2,7 @@ package livinglab.cse_back.food_truck.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import livinglab.cse_back.menu.entity.Menu;
 import livinglab.cse_back.user.entity.User;
@@ -27,6 +28,7 @@ public class FoodTruck {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
+    @JsonManagedReference
     @JsonIgnore
     private User owner;
 
