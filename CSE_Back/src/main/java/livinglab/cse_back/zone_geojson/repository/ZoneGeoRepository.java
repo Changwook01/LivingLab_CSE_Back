@@ -44,4 +44,6 @@ public interface ZoneGeoRepository extends JpaRepository<ZoneGeo, Long> {
                                         @Param("minLon") Double minLon,
                                         @Param("maxLon") Double maxLon
     );
+
+
 }

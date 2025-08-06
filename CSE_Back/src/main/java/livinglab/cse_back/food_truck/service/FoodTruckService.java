@@ -1,5 +1,7 @@
 package livinglab.cse_back.food_truck.service;
 
+import livinglab.cse_back.food_truck.dto.OperatingTruckDto;
+import livinglab.cse_back.food_truck.dto.OperatingTruckProjection;
 import livinglab.cse_back.food_truck.entity.FoodTruck;
 import livinglab.cse_back.food_truck.repository.FoodTruckRepository;
 import livinglab.cse_back.user.entity.User;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 import jakarta.persistence.EntityNotFoundException;
@@ -76,5 +79,17 @@ public class FoodTruckService {
     private FoodTruck findFoodTruckById(Long truckId) {
         return foodTruckRepository.findById(truckId)
                 .orElseThrow(() -> new EntityNotFoundException("푸드트럭을 찾을 수 없습니다. ID: " + truckId));
+    }
+    /**
+     * 지도 영역 내 영업 중인 푸드트럭 검색 로직
+     */
+    @Transactional(readOnly = true) // 읽기 전용 트랜잭션으로 성능 향상
+    public List<OperatingTruckDto> findOperatingTrucks(Double minLat, Double maxLat, Double minLon, Double maxLon) {
+        List<OperatingTruckProjection> projections = foodTruckRepository.findOperatingTrucksInRegion(minLat, maxLat, minLon, maxLon);
+
+        // Projection 리스트를 DTO 리스트로 변환
+        return projections.stream()
+                .map(p -> new OperatingTruckDto(p.getId(), p.getName(), p.getLatitude(), p.getLongitude(), p.getMenu()))
+                .collect(Collectors.toList());
     }
 }

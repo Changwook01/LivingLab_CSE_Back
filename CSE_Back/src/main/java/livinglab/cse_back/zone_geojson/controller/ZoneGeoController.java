@@ -37,6 +37,7 @@ public class ZoneGeoController {
         return zoneGeoRepository.findNearbyZones(latitude, longitude, radius);
     }
 
+
     @GetMapping("/region")
     public List<ZoneGeoDto> getZonesInRegion(
             @RequestParam("minLat") Double minLat,
@@ -48,4 +49,5 @@ public class ZoneGeoController {
         // ✅ 변환 과정 없이 바로 리포지토리 결과를 반환합니다.
         return zoneGeoRepository.findZonesInRegion(minLat, maxLat, minLon, maxLon);
     }
+
 }
