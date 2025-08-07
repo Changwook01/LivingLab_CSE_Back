@@ -19,7 +19,18 @@ public class MenuService {
         return menuRepository.save(menu);
     }
 
-    // 특정 푸드트럭 메뉴 조회
+    public List<Menu> getAllMenus() {
+        return menuRepository.findAll();
+    }
+    
+    public List<Menu> getAllMenus(Long foodTruckId) {
+        if (foodTruckId == null) {
+            return getAllMenus(); // 내부에서 호출
+        } else {
+            return menuRepository.findByFoodTruckId(foodTruckId);
+        }
+    }
+
     public List<Menu> getMenusByFoodTruckId(Long foodTruckId) {
         return menuRepository.findByFoodTruckId(foodTruckId);
     }
@@ -29,4 +40,25 @@ public class MenuService {
         menuRepository.deleteById(id);
     }
 
+    public Menu toggleAvailability(Long id) {
+        Menu menu = menuRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Menu not found"));
+        menu.setAvailable(!menu.isAvailable());
+        return menuRepository.save(menu);
+    }
+
+    
+
+    public Menu updateMenu(Long id, Menu updatedMenu) {
+        Menu menu = menuRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Menu not found"));
+    
+        menu.setName(updatedMenu.getName());
+        menu.setPrice(updatedMenu.getPrice());
+        menu.setCategory(updatedMenu.getCategory());
+        menu.setImageUrl(updatedMenu.getImageUrl());
+        menu.setAvailable(updatedMenu.isAvailable());
+    
+        return menuRepository.save(menu);
+    }
 }
