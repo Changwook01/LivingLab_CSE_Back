@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LoginDTO {
     private User user;
+    private User.Role role;
     private FoodTruck foodTruck;
     private List<Menu> menus;
     private TodaySalesDTO todaySales;

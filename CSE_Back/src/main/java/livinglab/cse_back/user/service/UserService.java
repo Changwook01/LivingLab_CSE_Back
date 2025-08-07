@@ -150,36 +150,28 @@ public class UserService {
         FoodTruck foodTruck = null;
         List<Menu> menus = List.of();
 
-        // 사용자 역할에 따른 정보 제공
         if (user.getRole() == User.Role.OPERATOR) {
             foodTruck = foodTruckRepository.findByOwnerId(user.getId()).orElse(null);
             if (foodTruck != null) {
                 menus = menuRepository.findByFoodTruckId(foodTruck.getId());
             }
         } else if (user.getRole() == User.Role.ADMIN) {
-            // 관리자는 모든 푸드트럭과 메뉴 정보를 볼 수 있음
-            foodTruck = null; // 관리자는 특정 푸드트럭에 속하지 않음
+            foodTruck = null;
             menus = menuRepository.findAll();
         }
 
-        // 오늘의 판매 현황 (실시간)
         LocalDate today = LocalDate.now();
         long orderCount = orderRepository.countTodayOrders(today);
         int totalRevenue = Optional.ofNullable(orderRepository.sumTodayRevenue(today)).orElse(0);
-
         List<Object[]> stats = orderRepository.findMenuSalesStatsToday(today);
-
         String topMenu = null;
         if (!stats.isEmpty()) {
-            // orderCount, maxPrice 기준으로 이미 정렬되어 있으니 첫 번째 요소가 우선 순위
             List<Object[]> topCandidates = stats.stream()
                     .filter(o -> ((Long) o[1]).equals(stats.get(0)[1]) && ((Integer) o[2]).equals(stats.get(0)[2]))
                     .toList();
-
             if (topCandidates.size() == 1) {
                 topMenu = (String) topCandidates.get(0)[0];
             } else {
-                // orderCount와 maxPrice가 같은 메뉴가 여러 개일 때 랜덤 선택
                 int randomIndex = (int) (Math.random() * topCandidates.size());
                 topMenu = (String) topCandidates.get(randomIndex)[0];
             }
@@ -193,6 +185,7 @@ public class UserService {
 
         return LoginDTO.builder()
                 .user(user)
+                .role(user.getRole()) // 👈 여기서 사용자의 role을 설정합니다.
                 .foodTruck(foodTruck)
                 .menus(menus)
                 .todaySales(salesResponse)
