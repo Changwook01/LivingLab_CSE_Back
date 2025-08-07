@@ -1,22 +1,13 @@
 package livinglab.cse_back.user.dto;
 
-import livinglab.cse_back.food_truck.entity.FoodTruck;
-import livinglab.cse_back.menu.entity.Menu;
-import livinglab.cse_back.order.dto.TodaySalesDTO;
-import livinglab.cse_back.user.entity.User;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Data;
 
-import java.util.List;
-
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) // null인 필드는 JSON 응답에서 제외
 public class LoginDTO {
-    private User user;
-    private User.Role role;
-    private FoodTruck foodTruck;
-    private List<Menu> menus;
-    private TodaySalesDTO todaySales;
+    private UserDTO user;
+    private PartnerDTO partnerDetails; // 파트너가 아닐 경우 이 필드는 null
 }

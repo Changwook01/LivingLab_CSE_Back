@@ -7,6 +7,8 @@ import livinglab.cse_back.food_truck.repository.FoodTruckRepository;
 import livinglab.cse_back.menu.entity.Menu;
 import livinglab.cse_back.menu.repository.MenuRepository;
 import livinglab.cse_back.order.repository.OrderRepository;
+import livinglab.cse_back.user.dto.PartnerDTO;
+import livinglab.cse_back.user.dto.UserDTO;
 import livinglab.cse_back.user.entity.User;
 import livinglab.cse_back.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -143,52 +145,43 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("이메일이 존재하지 않습니다."));
 
-        if (!password.equals(user.getPassword())) {
+        if (!password.equals(user.getPassword())) { // 실제로는 암호화된 비밀번호 비교 필요
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        FoodTruck foodTruck = null;
-        List<Menu> menus = List.of();
+        UserDTO userDTO = UserDTO.from(user);
+        PartnerDTO partnerDetails = null;
 
+        // 사용자가 파트너(OPERATOR)인 경우에만 추가 정보 조회
         if (user.getRole() == User.Role.OPERATOR) {
-            foodTruck = foodTruckRepository.findByOwnerId(user.getId()).orElse(null);
+            FoodTruck foodTruck = foodTruckRepository.findByOwnerId(user.getId()).orElse(null);
+            List<Menu> menus = List.of();
             if (foodTruck != null) {
                 menus = menuRepository.findByFoodTruckId(foodTruck.getId());
+                userDTO.setTruckName(foodTruck.getName()); // UserDTO에 트럭 이름 설정
             }
-        } else if (user.getRole() == User.Role.ADMIN) {
-            foodTruck = null;
-            menus = menuRepository.findAll();
-        }
 
-        LocalDate today = LocalDate.now();
-        long orderCount = orderRepository.countTodayOrders(today);
-        int totalRevenue = Optional.ofNullable(orderRepository.sumTodayRevenue(today)).orElse(0);
-        List<Object[]> stats = orderRepository.findMenuSalesStatsToday(today);
-        String topMenu = null;
-        if (!stats.isEmpty()) {
-            List<Object[]> topCandidates = stats.stream()
-                    .filter(o -> ((Long) o[1]).equals(stats.get(0)[1]) && ((Integer) o[2]).equals(stats.get(0)[2]))
-                    .toList();
-            if (topCandidates.size() == 1) {
-                topMenu = (String) topCandidates.get(0)[0];
-            } else {
-                int randomIndex = (int) (Math.random() * topCandidates.size());
-                topMenu = (String) topCandidates.get(randomIndex)[0];
-            }
-        }
+            // 매출 정보 조회
+            LocalDate today = LocalDate.now();
+            long orderCount = orderRepository.countTodayOrders(today);
+            int totalRevenue = Optional.ofNullable(orderRepository.sumTodayRevenue(today)).orElse(0);
+            String topMenu = orderRepository.findTopMenuToday(today);
+            TodaySalesDTO salesResponse = TodaySalesDTO.builder()
+                    .orderCount(orderCount)
+                    .totalRevenue(totalRevenue)
+                    .topMenu(topMenu)
+                    .build();
 
-        TodaySalesDTO salesResponse = TodaySalesDTO.builder()
-                .orderCount(orderCount)
-                .totalRevenue(totalRevenue)
-                .topMenu(topMenu)
-                .build();
+            partnerDetails = PartnerDTO.builder()
+                    .foodTruck(foodTruck)
+                    .menus(menus)
+                    .todaySales(salesResponse)
+                    .build();
+        }
 
         return LoginDTO.builder()
-                .user(user)
-                .role(user.getRole()) // 👈 여기서 사용자의 role을 설정합니다.
-                .foodTruck(foodTruck)
-                .menus(menus)
-                .todaySales(salesResponse)
+                .user(userDTO)
+                .partnerDetails(partnerDetails) // 파트너가 아니면 이 값은 null
                 .build();
     }
 }
