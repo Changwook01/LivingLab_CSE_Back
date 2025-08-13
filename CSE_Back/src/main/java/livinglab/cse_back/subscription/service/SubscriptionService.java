@@ -39,12 +39,9 @@ public class SubscriptionService {
                 .orElseGet(() -> subscriptionRepository.save(new Subscription(user, foodTruck)));
     }
 
-    /**
-     * 유저가 푸드트럭 구독 취소
-     */
     public void unsubscribe(User user, FoodTruck foodTruck) {
         subscriptionRepository.findByUserAndFoodTruck(user, foodTruck)
-                .ifPresent(Subscription::unsubscribe);
+                .ifPresent(subscriptionRepository::delete);
     }
 
     /**
